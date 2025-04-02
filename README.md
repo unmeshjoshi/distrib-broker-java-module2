@@ -29,26 +29,26 @@ Complete the `tryCreatingControllerPath` method to:
 - Manage controller state transitions
 - Ensure proper error handling
 
+
+### 4. Log Implementation Testing
+Complete the `LogTest` implementation:
+- Implement log append and read functionality
+- Test log segment creation and management
+- Verify log entry persistence
+- Test log compaction if implemented
+
+Key test requirements:
+- Test log entry writing and reading
+- Verify log segment boundaries
+- Test log file handling
+- Ensure proper error handling for I/O operations
+
 The current `ZkController.java` provides the framework with:
 - Controller election structure
 - ZooKeeper event handling
 - Broker state management
 
-### 4. Create Topic Command
-Implement a command to create topics with specified configurations:
-- Accept parameters for:
-  - Topic name
-  - Number of partitions
-  - Replication factor
-- Validate input parameters
-- Ensure topic names are unique
-
-Example API:
-```java
-public void createTopic(String topicName, int partitions, int replicationFactor)
-```
-
-### 5. Partition and Replica Assignment
+### Partition and Replica Assignment
 Implement logic for:
 - Distributing partitions across available brokers evenly
 - Assigning replicas to different brokers for fault tolerance
@@ -60,8 +60,8 @@ Key considerations:
 - Replicas should be distributed across different brokers for fault tolerance
 - Implement a round-robin or similar algorithm for balanced distribution
 
-### 6. ZooKeeper Persistence
-Store topic and partition information in ZooKeeper:
+### ZooKeeper Persistence
+Stores topic and partition information in ZooKeeper:
 - Create persistent nodes for topics
 - Store partition assignments
 - Store replica assignments
@@ -72,8 +72,8 @@ brokers/topics/[topic_name]
 /brokers/topics/[topic_name]/partitions/[partition_id]
 /brokers/topics/[topic_name]/partitions/[partition_id]/state
 
-### 7. Topic Partition Change Detection
-Implement callback mechanisms to:
+### Topic Partition Change Detection
+Callback mechanisms to:
 - Monitor changes in topic partitions
 - React to partition reassignments
 - Handle broker failures affecting partitions
@@ -84,7 +84,7 @@ Example callback registration:
 zookeeperClient.subscribeDataChanges("/brokers/topics", topicChangeListener);
 ```
 
-### 8. Controller Election
+### Controller Election
 Implement controller election using ZooKeeper:
 - Use ZooKeeper's atomic operations for leader election
 - Handle controller failover
@@ -97,9 +97,33 @@ Current implementation in `ZkController.java`:
 - Maintains live broker information
 - Implements callback interfaces for ZooKeeper events
 
+### 4. Log Implementation Testing
+Complete the `LogTest` implementation:
+- Implement log append and read functionality
+- Test log segment creation and management
+- Verify log entry persistence
+- Test log compaction if implemented
+
+Key test requirements:
+- Test log entry writing and reading
+- Verify log segment boundaries
+- Test log file handling
+- Ensure proper error handling for I/O operations
+
 ## Testing Requirements
 - Test topic creation with various partition and replica configurations
 - Verify partition distribution balance
 - Test controller election and failover scenarios
 - Ensure proper handling of broker failures
 - Validate ZooKeeper persistence
+- Verify log operations and persistence
+  - Log append functionality
+  - Log read operations
+  - Log segment management
+  - File I/O handling
+
+## Notes
+- Ensure thread safety in all implementations
+- Handle edge cases and failure scenarios
+- Implement proper logging and error handling
+- Follow Kafka's design principles for consistency
