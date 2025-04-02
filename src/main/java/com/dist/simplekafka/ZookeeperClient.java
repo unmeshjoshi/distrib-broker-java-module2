@@ -67,6 +67,11 @@ public class ZookeeperClient {
     }
 
 
+    public Optional<List<String>> subscribeTopicChangeListener(IZkChildListener listener) {
+        List<String> result = zkClient.subscribeChildChanges(BrokerTopicsPath, listener);
+        return Optional.ofNullable(result);
+    }
+
     private void createEphemeralPath(ZkClient client, String path, String data) {
         try {
             client.createEphemeral(path, data);
@@ -97,7 +102,6 @@ public class ZookeeperClient {
         }
         return integerBrokerIds;
     }
-
 
     public void setPartitionReplicasForTopic(String topicName,
                                              List<PartitionReplicas> partitionReplicas) {
@@ -150,13 +154,17 @@ public class ZookeeperClient {
             //Assignment: Create controller path in Zookeeper..
             //Important to create an ephemeralPath which disasspears if the
             // node fails.
-            createEphemeralPath(zkClient, ControllerPath,
-                    String.valueOf(brokerId));
+            //     createEphemeralPath(zkClient, ControllerPath,
+            //                    String.valueOf(brokerId));
 
         } catch (ZkNodeExistsException e) {
             String existingControllerId = zkClient.readData(ControllerPath);
             throw new ControllerExistsException(Integer.parseInt(existingControllerId));
         }
+    }
+
+    public void subscribeControllerChangeListener(IZkDataListener listener) {
+        zkClient.subscribeDataChanges(ControllerPath, listener);
     }
 
 

@@ -1,9 +1,12 @@
 package com.dist.simplekafka;
 
+import org.I0Itec.zkclient.IZkChildListener;
+import org.I0Itec.zkclient.IZkDataListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class ZkController {
+public class ZkController implements IZkChildListener, IZkDataListener {
     private final ZookeeperClient zookeeperClient;
     private final int brokerId;
     private int currentLeader = -1;
@@ -14,8 +17,17 @@ public class ZkController {
         this.brokerId = brokerId;
     }
 
+    /**
+     * public static void main() {
+     *     registerBroker();
+     *     ZkController controller = new ZkController();
+     *     controller.startup();
+     * }
+     */
+
     public void startup() {
         elect();
+        zookeeperClient.subscribeControllerChangeListener(this);
     }
 
 
@@ -50,7 +62,22 @@ public class ZkController {
      * leading to cluster inconsistencies.
      */
     public void elect() {
-      //Implement election
+        try {
+            // Attempt to create an ephemeral node in ZooKeeper to become the controller
+            // This is an atomic operation - only one broker can succeed
+            zookeeperClient.tryCreatingControllerPath(brokerId);
+
+            // If we get here, we successfully became the controller
+            this.currentLeader = brokerId;
+
+            // Initialize controller state by loading broker information
+            onBecomingLeader();
+
+        } catch (ControllerExistsException e) {
+            // Another broker is already the controller
+            // Update our local state to recognize the existing controller
+            this.currentLeader = e.getControllerId();
+        }
     }
 
     private void onBecomingLeader() {
@@ -60,5 +87,20 @@ public class ZkController {
 
     public int getCurrentLeaderId() {
         return currentLeader;
+    }
+
+    @Override
+    public void handleChildChange(String parentPath, List<String> currentChilds) throws Exception {
+
+    }
+
+    @Override
+    public void handleDataChange(String dataPath, Object data) throws Exception {
+        elect();
+    }
+
+    @Override
+    public void handleDataDeleted(String dataPath) throws Exception {
+
     }
 }

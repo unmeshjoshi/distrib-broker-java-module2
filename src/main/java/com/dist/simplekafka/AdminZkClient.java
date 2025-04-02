@@ -3,12 +3,13 @@ package com.dist.simplekafka;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class CreateTopicCommand {
+//Name same as in Kafka codebase.
+public class AdminZkClient {
     private ZookeeperClient zookeeperClient;
     private ReplicaAssigner replicaAssigner;
 
-    public CreateTopicCommand(ZookeeperClient zookeeperClient,
-                              ReplicaAssigner replicaAssigner) {
+    public AdminZkClient(ZookeeperClient zookeeperClient,
+                         ReplicaAssigner replicaAssigner) {
         this.zookeeperClient = zookeeperClient;
         this.replicaAssigner = replicaAssigner;
     }
