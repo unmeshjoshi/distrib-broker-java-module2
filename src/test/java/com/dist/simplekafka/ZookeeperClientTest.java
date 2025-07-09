@@ -5,10 +5,11 @@ import com.dist.common.ZookeeperTestHarness;
 import org.I0Itec.zkclient.IZkChildListener;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 
 //Assignment3 - Implement RegisterBroker method
 //Assignment4 - Implement BrokerChangeListener.
@@ -26,7 +27,7 @@ public class ZookeeperClientTest extends ZookeeperTestHarness {
     @Test
     public void testSubscribeBrokerChangeListener() {
         List<String> brokerIds = new ArrayList<>();
-        IZkChildListener listener =  new IZkChildListener() {
+        IZkChildListener listener = new IZkChildListener() {
             @Override
             public void handleChildChange(String parentPath, List<String> currentChilds) throws Exception {
                 brokerIds.addAll(currentChilds);
@@ -37,7 +38,7 @@ public class ZookeeperClientTest extends ZookeeperTestHarness {
 
         zookeeperClient.registerBroker(new Broker(1, "10.10.10.10", 8000));
 
-        TestUtils.waitUntilTrue(()->{
+        TestUtils.waitUntilTrue(() -> {
             return brokerIds.size() == 1;
         }, "Waiting for getting broker added notification");
 

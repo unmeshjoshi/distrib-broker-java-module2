@@ -3,7 +3,9 @@ package com.dist.simplekafka;
 import com.dist.common.ZookeeperTestHarness;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import static junit.framework.Assert.assertEquals;
 

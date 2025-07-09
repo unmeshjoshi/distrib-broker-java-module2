@@ -19,10 +19,10 @@ public class ReplicaAssigner {
      * 1. Each partition has exactly replicationFactor replicas
      * 2. Replicas for a partition are on different brokers
      * 3. Replicas are evenly distributed across all brokers
-     *
+     * <p>
      * Strategy:
      * - Use a "starting point" approach where each partition starts assigning
-     *   from a different position in the broker list
+     * from a different position in the broker list
      * - This naturally achieves even distribution while keeping replicas separate
      */
 

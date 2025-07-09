@@ -24,16 +24,16 @@ public class ZkControllerTest extends ZookeeperTestHarness {
      * Tests the distributed controller election process with multiple brokers.
      * This test verifies that:
      * 1. When multiple brokers attempt to become controller simultaneously,
-     *    only one succeeds (demonstrating ZooKeeper's atomic operations)
+     * only one succeeds (demonstrating ZooKeeper's atomic operations)
      * 2. All brokers agree on who the controller is (demonstrating consensus)
      * 3. The lowest broker ID (1) becomes the controller (implementation detail
-     *    of how the election works in this example)
-     * 
+     * of how the election works in this example)
+     * <p>
      * Real-world implications:
      * - In a distributed system, we must ensure only one controller exists
      * - All nodes must have the same view of who the controller is
      * - This test shows how ZooKeeper prevents "split-brain" scenarios where
-     *   multiple nodes think they're the controller
+     * multiple nodes think they're the controller
      */
     @Test
     public void forMultipleNodesOnlyOneBecomesController() {

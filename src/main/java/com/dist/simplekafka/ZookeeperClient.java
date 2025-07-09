@@ -17,12 +17,10 @@ import java.util.*;
 
 
 public class ZookeeperClient {
-    private static final Logger logger = Logger.getLogger(ZookeeperClient.class);
-
     public static final String BrokerIdsPath = "/brokers/ids";
     public static final String BrokerTopicsPath = "/brokers/topics";
     public static final String ControllerPath = "/controller";
-
+    private static final Logger logger = Logger.getLogger(ZookeeperClient.class);
     private final ZkClient zkClient;
     private final Config config;
 
@@ -31,6 +29,7 @@ public class ZookeeperClient {
         zkClient = new ZkClient(config.getZkConnect(), config.getZkSessionTimeoutMs(), config.getZkConnectionTimeoutMs(), new ZKStringSerializer());
         zkClient.subscribeStateChanges(new SessionExpireListener());
     }
+
     public void registerSelf() {
         Broker broker = new Broker(config.getBrokerId(), config.getHostName(), config.getPort());
         registerBroker(broker);
@@ -133,7 +132,8 @@ public class ZookeeperClient {
         Map<String, List<PartitionReplicas>> topicPartitionMap = new HashMap<>();
         for (String topicName : topics) {
             String partitionAssignments = zkClient.readData(getTopicPath(topicName));
-            List<PartitionReplicas> partitionReplicas = JsonSerDes.deserialize(partitionAssignments.getBytes(), new TypeReference<List<PartitionReplicas>>() {});
+            List<PartitionReplicas> partitionReplicas = JsonSerDes.deserialize(partitionAssignments.getBytes(), new TypeReference<List<PartitionReplicas>>() {
+            });
             topicPartitionMap.put(topicName, partitionReplicas);
         }
         return topicPartitionMap;
@@ -176,8 +176,7 @@ public class ZookeeperClient {
         }
 
         @Override
-        public void handleNewSession() throws Exception
-        {
+        public void handleNewSession() throws Exception {
             logger.info("re-registering broker info in ZK for broker " + config.getBrokerId());
             registerSelf();
             logger.info("done re-registering broker");

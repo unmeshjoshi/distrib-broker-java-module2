@@ -15,7 +15,7 @@ public class ReplicaAssignerTest {
     private List<Integer> brokerList;
 
     @Before
-    public void setUp()  {
+    public void setUp() {
         assigner = new ReplicaAssigner(new Random(42));
         brokerList = List.of(1, 2, 3);
 
